@@ -49,3 +49,22 @@ def search(request):
             return render(request, "encyclopedia/search.html", {
                 "searches": foundTitles
             })
+
+def create(request):
+    if request.method == "POST":
+        create_title = request.POST["create_title"]
+        create_content = request.POST["create_content"]
+        titleCheck = util.get_entry(create_title)
+        if titleCheck is not None:
+            return render(request, "encyclopedia/error.html", {
+                "error": "The title you want to create already exists."
+            })
+        else:
+            util.save_entry(create_title, create_content)
+            content_md = convert_md_to_html(create_title)
+            return render(request, "encyclopedia/title.html", {
+                "title": create_title,
+                "content": content_md
+            })
+    else: #if it's a get method 
+        return render(request, "encyclopedia/create.html")

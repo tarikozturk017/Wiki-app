@@ -68,3 +68,21 @@ def create(request):
             })
     else: #if it's a get method 
         return render(request, "encyclopedia/create.html")
+
+def edit(request, title):
+    if request.method == "POST":
+        edit_content = request.POST["edit_content"]
+        util.save_entry(title, edit_content)
+        content_md = convert_md_to_html(edit_content)
+        return render(request, "encyclopedia/title.html", {
+            "title": title,
+            "content": content_md
+        })
+    else: #if it's a get method 
+        if title not in util.list_entries():
+            raise Http404
+        content = util.get_entry(title)
+        print(Markdown().convert(content))
+        return render(request, "encyclopedia/edit.html", {
+            
+        } )

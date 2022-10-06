@@ -7,13 +7,16 @@
 {% block body %}
     <h1>Edit Page</h1>
 
-    <form action="{% url 'edit' %}" method="post">
+    <form action="{% url 'save' %}" method="post">
         {% csrf_token %}
+        <label for="edit_title">Enter title:</label>
+        <input class="edit_title" type="text" name="edit_title" value="{{ title }}">
+        <br>
         <label for="edit_content">Enter Markdown Content:</label>
         <br>
         <textarea id="edit_content" name="edit_content" placeholder="Enter the Markdown content">{{ content }}</textarea>
         <br>
-        <input type="submit" value="Edit Page">
+        <input type="submit" value="Save Page">
     </form>
 
 {% endblock %}

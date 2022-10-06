@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from markdown2 import Markdown
 from django.http import Http404
-from django import forms
-from django.urls import reverse
 
 
 from . import util
@@ -69,20 +67,24 @@ def create(request):
     else: #if it's a get method 
         return render(request, "encyclopedia/create.html")
 
-def edit(request, title):
+def edit(request):
     if request.method == "POST":
+        edit_title = request.POST["edit_title"]
+        edit_content = util.get_entry(edit_title)
+        return render(request, "encyclopedia/edit.html", {
+            "title": edit_title,
+            "content": edit_content
+        })
+
+def save(request):
+    if request.method == "POST":
+        edit_title = request.POST["edit_title"]
         edit_content = request.POST["edit_content"]
-        util.save_entry(title, edit_content)
-        content_md = convert_md_to_html(edit_content)
+        util.save_entry(edit_title, edit_content)
+        content_md = convert_md_to_html(edit_title)
         return render(request, "encyclopedia/title.html", {
-            "title": title,
+            "title": edit_title,
             "content": content_md
         })
     else: #if it's a get method 
-        if title not in util.list_entries():
-            raise Http404
-        content = util.get_entry(title)
-        print(Markdown().convert(content))
-        return render(request, "encyclopedia/edit.html", {
-            
-        } )
+        raise Http404

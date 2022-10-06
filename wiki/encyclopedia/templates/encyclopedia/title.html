@@ -7,7 +7,11 @@
 {% block body %}
 <div class="content">
     {{ content|safe }}
-    <a class="edit" href=/edit/{{title}}>Edit Page</a>
+    <form action="{% url 'edit' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="edit_title" value="{{ title }}">
+        <input type="submit" value="Edit">
+    </form>
 </div>
     
 {% endblock %}

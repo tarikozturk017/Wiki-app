@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+import random
+from django.shortcuts import render
 from markdown2 import Markdown
 from django.http import Http404
-
 
 from . import util
 #from wiki import encyclopedia
@@ -88,3 +88,12 @@ def save(request):
         })
     else: #if it's a get method 
         raise Http404
+
+def randomPage(request):
+    listEntries = util.list_entries()
+    randomTitle = random.choice(listEntries)
+    content_md = convert_md_to_html(randomTitle)
+    return render(request, "encyclopedia/title.html", {
+        "title": randomTitle,
+        "content": content_md
+    })
